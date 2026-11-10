@@ -1,16 +1,20 @@
 import mysql.connector
+from dotenv import load_dotenv
+import os
 
 def connect_db():
     connection = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="7862492",
-        database="airline_booking"
+        host=os.getenv("db_host"),
+        user=os.getenv("db_user"),
+        password=os.getenv("db_password"),
+        database=os.getenv("db_database")
     )
     return connection
 
 
 if __name__ == "__main__":
+    load_dotenv()
+
     try:
         conn = connect_db()
 
