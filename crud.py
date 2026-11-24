@@ -1,9 +1,14 @@
 from database import connect_db
+from validation import validate_passenger
 
 
 # CREATE
 def add_passenger(passenger_id, first_name, last_name, gender, age, nationality):
-    """Insert a new passenger record into the Passenger table."""
+    """Validate input, then insert a new passenger record into the Passenger table."""
+    passenger_id, first_name, last_name, gender, age, nationality = validate_passenger(
+        passenger_id, first_name, last_name, gender, age, nationality
+    )
+
     conn = connect_db()
     cursor = conn.cursor()
     try:
@@ -13,6 +18,9 @@ def add_passenger(passenger_id, first_name, last_name, gender, age, nationality)
         """
         cursor.execute(sql, (passenger_id, first_name, last_name, gender, age, nationality))
         conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
     finally:
         cursor.close()
         conn.close()
@@ -49,7 +57,12 @@ def update_passenger(passenger_id, age):
         WHERE Passenger_id = %s
         """
         cursor.execute(sql, (age, passenger_id))
+        if cursor.rowcount == 0:
+            raise ValueError("Passenger ID not found.")
         conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
     finally:
         cursor.close()
         conn.close()
@@ -63,7 +76,12 @@ def delete_passenger(passenger_id):
     try:
         sql = "DELETE FROM Passenger WHERE Passenger_id = %s"
         cursor.execute(sql, (passenger_id,))
+        if cursor.rowcount == 0:
+            raise ValueError("Passenger ID not found.")
         conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
     finally:
         cursor.close()
         conn.close()

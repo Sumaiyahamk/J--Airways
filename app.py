@@ -1,4 +1,10 @@
+import logging
+import mysql.connector
 import streamlit as st
+from crud import add_passenger
+
+logger = logging.getLogger(__name__)
+
 from crud import add_passenger
 
 st.title("Global Airline Booking Portal")
@@ -13,15 +19,19 @@ with st.form("add_passenger_form"):
     submitted = st.form_submit_button("Add Passenger")
 
 if submitted:
-    if not passenger_id.strip() or not first_name.strip() or not last_name.strip():
-        st.error("Passenger ID, First Name, and Last Name cannot be empty.")
-    else:
+    try:
         add_passenger(
-            passenger_id.strip(),
-            first_name.strip(),
-            last_name.strip(),
+            passenger_id,
+            first_name,
+            last_name,
             gender,
             int(age),
-            nationality.strip(),
+            nationality,
         )
+    except ValueError as error:
+        st.error(str(error))
+    except mysql.connector.Error:
+        logger.exception("Saving passenger failed")
+        st.error("Could not save passenger. Please try again.")
+    else:
         st.success("Passenger added successfully!")
