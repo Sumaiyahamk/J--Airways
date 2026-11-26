@@ -1,9 +1,9 @@
 import pytest
+
 from validation import validate_passenger
 
 
 def test_valid_passenger_is_cleaned():
-    # Arrange
     raw_id = "  P1001  "
     raw_first = "  Alice "
     raw_last = " Smith  "
@@ -11,12 +11,10 @@ def test_valid_passenger_is_cleaned():
     raw_age = 29
     raw_nationality = "  Finland "
 
-    # Act
     result = validate_passenger(
         raw_id, raw_first, raw_last, raw_gender, raw_age, raw_nationality
     )
 
-    # Assert
     assert result == ("P1001", "Alice", "Smith", "Female", 29, "Finland")
 
 

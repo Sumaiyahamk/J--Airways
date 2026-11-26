@@ -1,38 +1,34 @@
-# Reusable input validation rules (independent of MySQL and Streamlit)
 MAX_ID_LENGTH = 50
 MAX_NAME_LENGTH = 100
+MIN_AGE = 0
+MAX_AGE = 120
+
+
+def validate_text(value, field_name, max_length):
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{field_name} cannot be empty.")
+    cleaned = value.strip()
+    if len(cleaned) > max_length:
+        raise ValueError(f"{field_name} is too long.")
+    return cleaned
 
 
 def validate_passenger(passenger_id, first_name, last_name, gender, age, nationality):
-    if not isinstance(passenger_id, str) or not passenger_id.strip():
-        raise ValueError("Passenger ID cannot be empty.")
-    if len(passenger_id.strip()) > MAX_ID_LENGTH:
-        raise ValueError("Passenger ID is too long.")
+    cleaned_id = validate_text(passenger_id, "Passenger ID", MAX_ID_LENGTH)
+    cleaned_first = validate_text(first_name, "First name", MAX_NAME_LENGTH)
+    cleaned_last = validate_text(last_name, "Last name", MAX_NAME_LENGTH)
+    cleaned_nationality = validate_text(nationality, "Nationality", MAX_NAME_LENGTH)
 
-    if not isinstance(first_name, str) or not first_name.strip():
-        raise ValueError("First name cannot be empty.")
-    if len(first_name.strip()) > MAX_NAME_LENGTH:
-        raise ValueError("First name is too long.")
-
-    if not isinstance(last_name, str) or not last_name.strip():
-        raise ValueError("Last name cannot be empty.")
-    if len(last_name.strip()) > MAX_NAME_LENGTH:
-        raise ValueError("Last name is too long.")
-
-    if not isinstance(nationality, str) or not nationality.strip():
-        raise ValueError("Nationality cannot be empty.")
-    if len(nationality.strip()) > MAX_NAME_LENGTH:
-        raise ValueError("Nationality is too long.")
-
-    # type(age) is not int also rejects booleans like True/False
-    if type(age) is not int or age < 0 or age > 120:
-        raise ValueError("Age must be a whole number between 0 and 120.")
+    if type(age) is not int or age < MIN_AGE or age > MAX_AGE:
+        raise ValueError(
+            f"Age must be a whole number between {MIN_AGE} and {MAX_AGE}."
+        )
 
     return (
-        passenger_id.strip(),
-        first_name.strip(),
-        last_name.strip(),
+        cleaned_id,
+        cleaned_first,
+        cleaned_last,
         gender,
         age,
-        nationality.strip(),
+        cleaned_nationality,
     )

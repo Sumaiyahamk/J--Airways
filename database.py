@@ -1,13 +1,12 @@
 import os
+
 import mysql.connector
 from dotenv import load_dotenv
 
-# Load .env variables immediately when this file is imported
 load_dotenv()
 
 
 def connect_db():
-    """Establish and return a connection to the MySQL database."""
     connection = mysql.connector.connect(
         host=os.getenv("db_host"),
         user=os.getenv("db_user"),
@@ -23,5 +22,5 @@ if __name__ == "__main__":
         if conn.is_connected():
             print("Database Connected Successfully!")
         conn.close()
-    except Exception as e:
+    except mysql.connector.Error as e:
         print("Error:", e)

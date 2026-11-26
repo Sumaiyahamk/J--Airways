@@ -2,9 +2,7 @@ from database import connect_db
 from validation import validate_passenger
 
 
-# CREATE
 def add_passenger(passenger_id, first_name, last_name, gender, age, nationality):
-    """Validate input, then insert a new passenger record into the Passenger table."""
     passenger_id, first_name, last_name, gender, age, nationality = validate_passenger(
         passenger_id, first_name, last_name, gender, age, nationality
     )
@@ -26,9 +24,7 @@ def add_passenger(passenger_id, first_name, last_name, gender, age, nationality)
         conn.close()
 
 
-# READ
 def get_passengers(limit=20):
-    """Retrieve a limited number of passenger records from the Passenger table."""
     conn = connect_db()
     cursor = conn.cursor()
     try:
@@ -45,9 +41,7 @@ def get_passengers(limit=20):
         conn.close()
 
 
-# UPDATE
 def update_passenger(passenger_id, age):
-    """Update the age of an existing passenger by Passenger_id."""
     conn = connect_db()
     cursor = conn.cursor()
     try:
@@ -68,9 +62,7 @@ def update_passenger(passenger_id, age):
         conn.close()
 
 
-# DELETE
 def delete_passenger(passenger_id):
-    """Delete a passenger record by Passenger_id."""
     conn = connect_db()
     cursor = conn.cursor()
     try:

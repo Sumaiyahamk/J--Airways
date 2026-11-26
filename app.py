@@ -1,11 +1,11 @@
 import logging
+
 import mysql.connector
 import streamlit as st
+
 from crud import add_passenger
 
 logger = logging.getLogger(__name__)
-
-from crud import add_passenger
 
 st.title("Global Airline Booking Portal")
 
